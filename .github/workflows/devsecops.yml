@@ -70,7 +70,7 @@ jobs:
         if: steps.check-pkg.outputs.has_pkg == 'false'
         run: echo "No package.json found, skipping dependency audit."
 
-  # JOB 4: Docker Security Scan (laporan saja, tidak block deploy)
+  # JOB 4: Docker Security Scan
   docker-scan:
     name: "Docker Security Scan (Trivy)"
     runs-on: ubuntu-latest
@@ -93,9 +93,9 @@ jobs:
           severity: "CRITICAL,HIGH"
 
       - name: Trivy scan complete
-        run: echo "Trivy scan complete - check report above for vulnerabilities"
+        run: echo "Trivy scan selesai - lihat laporan di atas"
 
-  # JOB 5: Deploy (hanya jika semua lolos)
+  # JOB 5: Deploy (hanya jika semua scan lolos)
   deploy:
     name: "Deploy ke Firebase Hosting"
     runs-on: ubuntu-latest
@@ -105,10 +105,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: keripik-kentang-1826e
-          channelId: live
+        run: firebase deploy --only hosting --project keripik-kentang-1826e --token "${{ secrets.FIREBASE_TOKEN }}"
