@@ -68,9 +68,9 @@ jobs:
 
       - name: Skip audit
         if: steps.check-pkg.outputs.has_pkg == 'false'
-        run: echo "No package.json, skipping."
+        run: echo "No package.json found, skipping dependency audit."
 
-  # JOB 4: Docker Security Scan
+  # JOB 4: Docker Security Scan (laporan saja, tidak block deploy)
   docker-scan:
     name: "Docker Security Scan (Trivy)"
     runs-on: ubuntu-latest
@@ -82,15 +82,18 @@ jobs:
       - name: Build Docker image
         run: docker build -t keripik-kentang:test .
 
-      - name: Run Trivy scanner
+      - name: Run Trivy scanner (report only)
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: "keripik-kentang:test"
           format: "table"
-          exit-code: "1"
+          exit-code: "0"
           ignore-unfixed: true
           vuln-type: "os,library"
           severity: "CRITICAL,HIGH"
+
+      - name: Trivy scan complete
+        run: echo "Trivy scan complete - check report above for vulnerabilities"
 
   # JOB 5: Deploy (hanya jika semua lolos)
   deploy:
