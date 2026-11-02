@@ -1,0 +1,89 @@
+# =====================================================
+# Kubernetes Deployment — Keripik Kentang
+# Security: non-root, read-only fs, resource limits
+# =====================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keripik-kentang
+  namespace: default
+  labels:
+    app: keripik-kentang
+    version: "1.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: keripik-kentang
+  template:
+    metadata:
+      labels:
+        app: keripik-kentang
+    spec:
+      # -- Security Context (Pod level) --
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+
+      containers:
+        - name: webapp
+          image: keripik-kentang:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+
+          # -- Security Context (Container level) --
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - NET_BIND_SERVICE
+
+          # -- Resource Limits --
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+
+          # -- Liveness & Readiness Probe --
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          # -- Volume Mounts (untuk tmpfs) --
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /var/run
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}

@@ -1,0 +1,54 @@
+# =====================================================
+# Docker Compose — Keripik Kentang Web App
+# Security: non-root, read-only fs, resource limits
+# =====================================================
+version: "3.9"
+
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: keripik-kentang:latest
+    container_name: keripik-kentang-app
+    ports:
+      - "8080:8080"
+    
+    # -- Security --
+    user: "1001:1001"
+    read_only: true                  # Filesystem read-only
+    security_opt:
+      - no-new-privileges:true       # Cegah privilege escalation
+    cap_drop:
+      - ALL                          # Drop semua capabilities
+    cap_add:
+      - NET_BIND_SERVICE             # Hanya izinkan bind port
+    
+    # -- Resource Limits --
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 64M
+    
+    # Tmpfs untuk folder yang perlu write
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    
+    # -- Health Check --
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    restart: unless-stopped
+    
+    environment:
+      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx/conf.d

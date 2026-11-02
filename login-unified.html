@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - Kentang Emas</title>
+    <meta name="description" content="Masuk ke akun Kentang Emas Anda">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold:    #F6A90A;
+            --orange:  #FF7A00;
+            --dark:    #1A1D2E;
+            --text:    #4A5568;
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: #0f0f1a;
+            overflow-x: hidden;
+        }
+
+        /* ── LEFT PANEL ── */
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #1A1D2E 0%, #2D1F07 60%, #3D2A0A 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: -120px; right: -120px;
+            width: 400px; height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(246,169,10,.2), transparent 70%);
+            pointer-events: none;
+        }
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -100px; left: -80px;
+            width: 300px; height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,122,0,.15), transparent 70%);
+            pointer-events: none;
+        }
+        .brand-logo {
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 48px;
+        }
+        .brand-icon {
+            width: 58px; height: 58px; border-radius: 16px;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; color: white;
+            box-shadow: 0 8px 30px rgba(246,169,10,.4);
+        }
+        .brand-name { font-family: 'Outfit', sans-serif; }
+        .brand-name span:first-child { display: block; font-size: 1.5rem; font-weight: 800; color: white; }
+        .brand-name span:last-child  { display: block; font-size: .85rem; color: rgba(255,255,255,.4); }
+        .left-headline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.4rem; font-weight: 800;
+            color: white; line-height: 1.2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .left-headline span { color: var(--gold); }
+        .left-sub {
+            font-size: .95rem; color: rgba(255,255,255,.5);
+            text-align: center; line-height: 1.7;
+            max-width: 340px;
+        }
+        .left-chips-img {
+            width: 200px; margin-top: 28px; border-radius: 16px;
+            opacity: .85;
+        }
+        .left-dots {
+            display: flex; gap: 8px; margin-top: 24px;
+        }
+        .left-dots span {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: rgba(255,255,255,.2);
+        }
+        .left-dots span.active { background: var(--gold); width: 24px; border-radius: 4px; }
+
+        /* ── RIGHT PANEL ── */
+        .right-panel {
+            width: 460px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 32px 40px;
+            overflow-y: auto;
+            min-height: 100vh;
+            max-height: 100vh;
+        }
+        .right-top {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .back-link {
+            display: flex; align-items: center; gap: 6px;
+            color: var(--text); font-size: .875rem; text-decoration: none;
+            transition: color .25s;
+        }
+        .back-link:hover { color: var(--gold); }
+        .register-hint { font-size: .875rem; color: var(--text); }
+        .register-hint a { color: var(--gold); font-weight: 600; text-decoration: none; }
+        .register-hint a:hover { text-decoration: underline; }
+
+        /* Role Tabs */
+        .role-tabs {
+            display: flex; gap: 0;
+            background: #F7F8FC;
+            border-radius: 12px; padding: 4px;
+            margin-bottom: 20px;
+        }
+        .role-tab {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            gap: 8px; padding: 11px 16px;
+            border-radius: 9px; cursor: pointer;
+            font-size: .875rem; font-weight: 500; color: #9CA3AF;
+            transition: all .25s; border: none; background: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .role-tab.active {
+            background: white;
+            color: var(--dark);
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+            font-weight: 600;
+        }
+        .role-tab.active i { color: var(--gold); }
+
+        /* Form heading */
+        .form-heading h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem; font-weight: 800;
+            color: var(--dark); margin-bottom: 4px;
+        }
+        .form-heading p { font-size: .875rem; color: var(--text); margin-bottom: 20px; }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block; font-size: .85rem; font-weight: 500;
+            color: var(--dark); margin-bottom: 7px;
+        }
+        .input-wrap { position: relative; }
+        .input-wrap i.prefix {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: #C0CADD; font-size: .9rem; transition: color .25s;
+        }
+        .input-wrap input {
+            width: 100%; padding: 12px 14px 12px 42px;
+            border: 1.5px solid #E8ECF0;
+            border-radius: 10px; font-size: .9rem;
+            font-family: 'Inter', sans-serif; color: var(--dark);
+            background: #FAFBFC;
+            transition: all .25s;
+            outline: none;
+        }
+        .input-wrap input:focus {
+            border-color: var(--gold);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(246,169,10,.12);
+        }
+        .input-wrap input:focus ~ i.prefix { color: var(--gold); }
+        .toggle-pass {
+            position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+            color: #C0CADD; font-size: .9rem; cursor: pointer;
+            transition: color .25s;
+        }
+        .toggle-pass:hover { color: var(--gold); }
+        .form-err { font-size: .78rem; color: #E53E3E; margin-top: 5px; display: none; }
+        .form-err.show { display: block; }
+
+        .form-row {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px;
+        }
+        .remember-label {
+            display: flex; align-items: center; gap: 7px;
+            font-size: .85rem; color: var(--text); cursor: pointer;
+        }
+        .remember-label input { accent-color: var(--gold); cursor: pointer; }
+        .forgot-link {
+            font-size: .85rem; color: var(--orange); font-weight: 600;
+            text-decoration: none; transition: color .25s;
+        }
+        .forgot-link:hover { color: var(--gold); text-decoration: underline; }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: white; border: none; border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: all .3s;
+            box-shadow: 0 8px 20px rgba(255,122,0,.3);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(255,122,0,.4); }
+        .btn-submit:disabled { opacity: .65; cursor: not-allowed; transform: none !important; }
+
+        /* Alert box */
+        .alert-box {
+            display: none; padding: 12px 16px;
+            border-radius: 10px; font-size: .875rem;
+            margin-bottom: 20px;
+            align-items: flex-start; gap: 10px;
+        }
+        .alert-box.show { display: flex; }
+        .alert-box.success { background: #F0FFF4; color: #276749; border: 1px solid #C6F6D5; }
+        .alert-box.error   { background: #FFF5F5; color: #C53030; border: 1px solid #FEB2B2; }
+        .alert-box.warning { background: #FFFBEB; color: #744210; border: 1px solid #FBD38D; }
+
+        /* Admin note */
+        .admin-note {
+            background: #FFFBEB; border: 1px solid #FBD38D;
+            border-radius: 10px; padding: 10px 14px;
+            font-size: .8rem; color: #744210;
+            margin-bottom: 14px; display: flex; gap: 8px;
+            line-height: 1.5;
+        }
+
+        /* Divider */
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 16px 0; color: #CBD5E0; font-size: .8rem;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: #E8ECF0;
+        }
+
+        /* Register link bottom */
+        .bottom-register {
+            text-align: center; margin-top: 14px;
+            font-size: .875rem; color: var(--text);
+            padding-bottom: 16px;
+        }
+        .bottom-register a { color: var(--gold); font-weight: 600; text-decoration: none; }
+        .bottom-register a:hover { text-decoration: underline; }
+
+        /* Logged In Card */
+        .logged-in-card {
+            display: none;
+            background: linear-gradient(135deg, #FFFBEB, #FFF3CD);
+            border: 1.5px solid #FBD38D;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .logged-in-card.show { display: block; }
+        .logged-in-card-header {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 14px;
+        }
+        .logged-in-avatar {
+            width: 44px; height: 44px; border-radius: 10px;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: white; font-weight: 700; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .logged-in-info p { font-size: .78rem; color: #92400E; margin-bottom: 2px; }
+        .logged-in-info strong { font-size: .9rem; color: #451A03; }
+        .logged-in-actions { display: flex; gap: 8px; }
+        .btn-go {
+            flex: 1; padding: 10px;
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            color: white; border: none; border-radius: 8px;
+            font-size: .85rem; font-weight: 600; cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            transition: all .25s;
+        }
+        .btn-go:hover { filter: brightness(1.05); transform: translateY(-1px); }
+        .btn-logout-switch {
+            flex: 1; padding: 10px;
+            background: white; color: #744210;
+            border: 1.5px solid #FBD38D; border-radius: 8px;
+            font-size: .85rem; font-weight: 500; cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            transition: all .25s;
+        }
+        .btn-logout-switch:hover { border-color: #E53E3E; color: #E53E3E; background: #FFF5F5; }
+
+        /* Toast */
+        .toast-wrap {
+            position: fixed; top: 20px; right: 20px;
+            z-index: 9999; display: flex; flex-direction: column; gap: 8px;
+        }
+        .toast {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 18px; border-radius: 10px;
+            color: white; font-size: .875rem; font-weight: 500;
+            box-shadow: 0 8px 24px rgba(0,0,0,.15);
+            animation: toastIn .35s cubic-bezier(.34,1.56,.64,1);
+            max-width: 340px;
+        }
+        @keyframes toastIn { from { opacity:0; transform:translateX(80px); } to { opacity:1; transform:translateX(0); } }
+        .toast.success { background: linear-gradient(135deg, #38A169, #2F855A); }
+        .toast.error   { background: linear-gradient(135deg, #E53E3E, #C53030); }
+        .toast.warning { background: linear-gradient(135deg, #D69E2E, #B7791F); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .left-panel { display: none; }
+            .right-panel { width: 100%; padding: 40px 28px; }
+        }
+        @media (max-width: 400px) {
+            .right-panel { padding: 32px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── LEFT DECORATIVE PANEL ── -->
+    <div class="left-panel">
+        <div class="brand-logo">
+            <div class="brand-icon"><i class="fa-solid fa-wheat-awn"></i></div>
+            <div class="brand-name">
+                <span>KentangEmas</span>
+                <span>Keripik Premium</span>
+            </div>
+        </div>
+        <h2 class="left-headline">Selamat Datang<br>Kembali <span>👋</span></h2>
+        <p class="left-sub">Masuk untuk menikmati layanan kami atau mengelola toko Kentang Emas.</p>
+        <img src="assets/images/hero.png" alt="Kentang Emas" class="left-chips-img"
+             onerror="this.style.display='none'">
+        <div class="left-dots">
+            <span class="active"></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- ── RIGHT FORM PANEL ── -->
+    <div class="right-panel">
+
+        <div class="right-top">
+            <a href="index.html" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </a>
+            <div class="register-hint">
+                Belum punya akun? <a href="register.html">Daftar</a>
+            </div>
+        </div>
+
+        <!-- Already Logged In Card -->
+        <div class="logged-in-card" id="loggedInCard">
+            <div class="logged-in-card-header">
+                <div class="logged-in-avatar" id="liAvatar">?</div>
+                <div class="logged-in-info">
+                    <p>Anda sudah masuk sebagai</p>
+                    <strong id="liName">—</strong>
+                    <p id="liRole" style="margin-top:2px;font-size:.75rem"></p>
+                </div>
+            </div>
+            <div class="logged-in-actions">
+                <button class="btn-go" id="btnGoToPage">
+                    <i class="fa-solid fa-arrow-right"></i> Lanjut
+                </button>
+                <button class="btn-logout-switch" id="btnLogoutSwitch">
+                    <i class="fa-solid fa-right-from-bracket"></i> Ganti Akun
+                </button>
+            </div>
+        </div>
+
+        <!-- Role Tabs -->
+        <div class="role-tabs">
+            <button class="role-tab active" id="tabUser" onclick="switchTab('user')">
+                <i class="fa-solid fa-circle-user"></i> Pelanggan
+            </button>
+            <button class="role-tab" id="tabAdmin" onclick="switchTab('admin')">
+                <i class="fa-solid fa-shield-halved"></i> Admin
+            </button>
+        </div>
+
+        <!-- Form Heading -->
+        <div class="form-heading">
+            <h2 id="formHeading">Masuk sebagai Pelanggan</h2>
+            <p id="formSubheading">Akses akun belanja Anda</p>
+        </div>
+
+        <!-- Admin Note (only visible on admin tab) -->
+        <div class="admin-note" id="adminNote" style="display:none">
+            <i class="fa-solid fa-shield-halved" style="margin-top:2px"></i>
+            <span>Halaman ini khusus untuk administrator toko. Pastikan Anda memiliki hak akses admin.</span>
+        </div>
+
+        <!-- Alert Box -->
+        <div class="alert-box" id="alertBox">
+            <i class="fa-solid fa-circle-info"></i>
+            <span id="alertMsg"></span>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" novalidate>
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <div class="input-wrap">
+                    <input type="email" id="loginEmail" placeholder="nama@email.com" autocomplete="email" required>
+                    <i class="fa-solid fa-envelope prefix"></i>
+                </div>
+                <p class="form-err" id="errEmail">Email tidak valid</p>
+            </div>
+
+            <div class="form-group">
+                <label for="loginPassword">Kata Sandi</label>
+                <div class="input-wrap">
+                    <input type="password" id="loginPassword" placeholder="Masukkan kata sandi" autocomplete="current-password" required>
+                    <i class="fa-solid fa-lock prefix"></i>
+                    <i class="fa-solid fa-eye toggle-pass" id="togglePass"></i>
+                </div>
+                <p class="form-err" id="errPassword">Kata sandi tidak boleh kosong</p>
+            </div>
+
+            <div class="form-row">
+                <label class="remember-label">
+                    <input type="checkbox" id="rememberMe"> Ingat saya
+                </label>
+                <a href="#" class="forgot-link">Lupa sandi?</a>
+            </div>
+
+            <button type="submit" class="btn-submit" id="btnSubmit">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span id="btnText">Masuk</span>
+            </button>
+        </form>
+
+        <div class="divider">atau</div>
+
+        <div class="bottom-register">
+            Belum punya akun? <a href="register.html">Daftar sekarang →</a>
+        </div>
+
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <script type="module">
+        import { auth, db } from './js/firebase-config.js';
+        import {
+            signInWithEmailAndPassword, onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import {
+            doc, getDoc, updateDoc, serverTimestamp, addDoc, collection
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // ── State ──
+        let activeTab = 'user'; // 'user' | 'admin'
+
+        // ── If already logged in, show banner ──
+        let loggedInUser = null;
+        let loggedInRole = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                document.getElementById('loggedInCard').classList.remove('show');
+                return;
+            }
+            const snap = await getDoc(doc(db, 'users', user.uid));
+            if (!snap.exists()) return;
+
+            const data = snap.data();
+            loggedInUser = user;
+            loggedInRole = data.role || 'user';
+            const nama = data.nama || user.email;
+            const initial = nama[0].toUpperCase();
+
+            // Show the banner card instead of auto-redirect
+            document.getElementById('liAvatar').textContent = initial;
+            document.getElementById('liName').textContent = nama;
+            document.getElementById('liRole').textContent =
+                loggedInRole === 'admin' ? '🛡️ Administrator' : '👤 Pelanggan';
+
+            const btnGo = document.getElementById('btnGoToPage');
+            btnGo.innerHTML = loggedInRole === 'admin'
+                ? '<i class="fa-solid fa-gauge-high"></i> Ke Dashboard'
+                : '<i class="fa-solid fa-store"></i> Ke Toko';
+            btnGo.onclick = () => {
+                window.location.href = loggedInRole === 'admin' ? 'admin.html' : 'index.html';
+            };
+
+            document.getElementById('loggedInCard').classList.add('show');
+        });
+
+        // ── Logout & Switch Account ──
+        document.getElementById('btnLogoutSwitch').addEventListener('click', async () => {
+            const btn = document.getElementById('btnLogoutSwitch');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Keluar...';
+            try {
+                // Record logout log if was admin
+                if (loggedInUser && loggedInRole) {
+                    await addDoc(collection(db, 'loginLogs'), {
+                        uid: loggedInUser.uid,
+                        email: loggedInUser.email,
+                        nama: document.getElementById('liName').textContent,
+                        loginAt: serverTimestamp(),
+                        eventType: 'logout'
+                    });
+                }
+                sessionStorage.removeItem('loginLogged');
+                await auth.signOut();
+                document.getElementById('loggedInCard').classList.remove('show');
+                showToast('Berhasil keluar. Silakan login dengan akun lain.', 'success');
+            } catch (e) {
+                showToast('Gagal logout: ' + e.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Ganti Akun';
+            }
+        });
+
+        // ── Tab Switch ──
+        window.switchTab = function(tab) {
+            activeTab = tab;
+            document.getElementById('tabUser').classList.toggle('active', tab === 'user');
+            document.getElementById('tabAdmin').classList.toggle('active', tab === 'admin');
+            document.getElementById('adminNote').style.display = tab === 'admin' ? 'flex' : 'none';
+
+            if (tab === 'user') {
+                document.getElementById('formHeading').textContent = 'Masuk sebagai Pelanggan';
+                document.getElementById('formSubheading').textContent = 'Akses akun belanja Anda';
+                document.getElementById('btnText').textContent = 'Masuk';
+            } else {
+                document.getElementById('formHeading').textContent = 'Masuk sebagai Admin';
+                document.getElementById('formSubheading').textContent = 'Akses panel administrasi';
+                document.getElementById('btnText').textContent = 'Masuk ke Dashboard';
+            }
+            hideAlert();
+        };
+
+        // ── Toggle Password ──
+        document.getElementById('togglePass').addEventListener('click', function() {
+            const input = document.getElementById('loginPassword');
+            const isPass = input.type === 'password';
+            input.type = isPass ? 'text' : 'password';
+            this.className = `fa-solid fa-eye${isPass ? '-slash' : ''} toggle-pass`;
+        });
+
+        // ── Form Submit ──
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email    = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // Validate
+            let valid = true;
+            if (!email || !/\S+@\S+\.\S+/.test(email)) {
+                document.getElementById('errEmail').classList.add('show'); valid = false;
+            } else {
+                document.getElementById('errEmail').classList.remove('show');
+            }
+            if (!password) {
+                document.getElementById('errPassword').classList.add('show'); valid = false;
+            } else {
+                document.getElementById('errPassword').classList.remove('show');
+            }
+            if (!valid) return;
+
+            const btn  = document.getElementById('btnSubmit');
+            const span = document.getElementById('btnText');
+            btn.disabled = true;
+            span.textContent = 'Memverifikasi...';
+            btn.querySelector('i').className = 'fa-solid fa-spinner fa-spin';
+            hideAlert();
+
+            try {
+                const cred = await signInWithEmailAndPassword(auth, email, password);
+                const user = cred.user;
+
+                // Get user profile from Firestore
+                const snap = await getDoc(doc(db, 'users', user.uid));
+                if (!snap.exists()) {
+                    await auth.signOut();
+                    showAlert('Akun tidak ditemukan di sistem.', 'error');
+                    resetBtn(); return;
+                }
+
+                const userData = snap.data();
+                const role = userData.role || 'user';
+
+                // Check account status
+                if (userData.isActive === false) {
+                    await auth.signOut();
+                    showAlert('Akun Anda telah dinonaktifkan. Hubungi admin.', 'error');
+                    resetBtn(); return;
+                }
+
+                // Admin tab: only allow admin role
+                if (activeTab === 'admin' && role !== 'admin') {
+                    await auth.signOut();
+                    showAlert('Akses ditolak! Akun ini bukan administrator.', 'error');
+                    resetBtn(); return;
+                }
+
+                // Update lastLoginAt
+                await updateDoc(doc(db, 'users', user.uid), {
+                    lastLoginAt: serverTimestamp()
+                });
+
+                // Record login log
+                await addDoc(collection(db, 'loginLogs'), {
+                    uid: user.uid, email: user.email,
+                    nama: userData.nama || user.email,
+                    loginAt: serverTimestamp(),
+                    eventType: 'login'
+                });
+
+                // Redirect based on role
+                if (role === 'admin') {
+                    showToast('Login admin berhasil! Mengalihkan...', 'success');
+                    sessionStorage.setItem('loginLogged', '1');
+                    setTimeout(() => window.location.href = 'admin.html', 1200);
+                } else {
+                    showToast('Selamat datang kembali! 🎉', 'success');
+                    setTimeout(() => window.location.href = 'index.html', 1200);
+                }
+
+            } catch (err) {
+                let msg = 'Terjadi kesalahan. Coba lagi.';
+                if (err.code === 'auth/invalid-credential' ||
+                    err.code === 'auth/user-not-found' ||
+                    err.code === 'auth/wrong-password') {
+                    msg = 'Email atau kata sandi salah.';
+                } else if (err.code === 'auth/too-many-requests') {
+                    msg = 'Terlalu banyak percobaan. Coba beberapa menit lagi.';
+                } else if (err.code === 'auth/user-disabled') {
+                    msg = 'Akun ini telah dinonaktifkan.';
+                }
+                showAlert(msg, 'error');
+                resetBtn();
+            }
+        });
+
+        function resetBtn() {
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = false;
+            btn.querySelector('i').className = 'fa-solid fa-right-to-bracket';
+            document.getElementById('btnText').textContent =
+                activeTab === 'admin' ? 'Masuk ke Dashboard' : 'Masuk';
+        }
+
+        function showAlert(msg, type) {
+            const box = document.getElementById('alertBox');
+            document.getElementById('alertMsg').textContent = msg;
+            box.className = `alert-box show ${type}`;
+            const icon = box.querySelector('i');
+            icon.className = type === 'error' ? 'fa-solid fa-circle-xmark'
+                           : type === 'success' ? 'fa-solid fa-circle-check'
+                           : 'fa-solid fa-triangle-exclamation';
+        }
+
+        function hideAlert() {
+            document.getElementById('alertBox').classList.remove('show');
+        }
+
+        function showToast(msg, type) {
+            const wrap = document.getElementById('toastWrap');
+            const icons = { success: 'circle-check', error: 'circle-xmark', warning: 'triangle-exclamation' };
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerHTML = `<i class="fa-solid fa-${icons[type]}"></i> ${msg}`;
+            wrap.appendChild(t);
+            setTimeout(() => t.remove(), 4000);
+        }
+    </script>
+
+</body>
+</html>

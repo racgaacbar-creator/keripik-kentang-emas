@@ -1,0 +1,25 @@
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Firebase local
+.firebase/
+.firebasecache/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Build output
+dist/
+build/

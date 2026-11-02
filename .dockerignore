@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# Environment & Secrets
+.env
+.env.local
+*.env
+
+# Firebase
+.firebase/
+.firebaserc
+
+# Node
+node_modules/
+npm-debug.log
+
+# Dev & CI files
+.github/
+tests/
+README.md
+*.md
+
+# Docker files (tidak perlu di dalam container)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Kubernetes
+k8s/

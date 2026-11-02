@@ -1,0 +1,147 @@
+rules_version = '2';
+
+// ================================================================
+// FIRESTORE SECURITY RULES — Kentang Emas
+// PKSJ: Hardened rules, tahan terhadap injection & privilege escalation
+// ================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============================================================
+    // HELPER FUNCTIONS
+    // ============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function isActiveUser() {
+      return isAuthenticated() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isActive != false;
+    }
+
+    // Pastikan user tidak mengubah kolom sensitif saat update profil sendiri
+    function noSensitiveFieldChanged() {
+      return !request.resource.data.diff(resource.data)
+        .affectedKeys()
+        .hasAny(['role', 'isActive', 'createdAt', 'uid']);
+    }
+
+    // Saat registrasi: user tidak boleh mengklaim role admin
+    function notClaimingAdmin() {
+      return !('role' in request.resource.data) ||
+        request.resource.data.role == 'user';
+    }
+
+    // Validasi nama: minimal 2 karakter, maksimal 100
+    function validName(name) {
+      return name is string && name.size() >= 2 && name.size() <= 100;
+    }
+
+    // Validasi data produk minimal
+    function validProductData() {
+      let d = request.resource.data;
+      return d.name is string &&
+             d.name.size() >= 2 &&
+             d.name.size() <= 200 &&
+             d.variants is list;
+    }
+
+    // ============================================================
+    // COLLECTION: users
+    // ============================================================
+    match /users/{userId} {
+
+      // Hanya pemilik atau admin yang bisa baca
+      allow read: if isOwner(userId) || isAdmin();
+
+      // CREATE: User hanya bisa daftar untuk dirinya sendiri
+      // TIDAK boleh mengklaim role admin sejak awal
+      allow create: if isAuthenticated() &&
+                       isOwner(userId) &&
+                       notClaimingAdmin() &&
+                       request.resource.data.get('role', 'user') == 'user' &&
+                       request.resource.data.get('isActive', true) == true &&
+                       validName(request.resource.data.get('nama', 'XX'));
+
+      // UPDATE: Pemilik boleh edit profil TAPI tidak boleh ubah role/isActive
+      // Admin boleh update semua field
+      allow update: if isAdmin() ||
+                      (isOwner(userId) &&
+                       isActiveUser() &&
+                       noSensitiveFieldChanged() &&
+                       validName(request.resource.data.get('nama', 'XX')));
+
+      // DELETE: Hanya admin
+      allow delete: if isAdmin();
+    }
+
+    // ============================================================
+    // COLLECTION: products
+    // ============================================================
+    match /products/{productId} {
+      // Semua orang bisa baca katalog
+      allow read: if true;
+      // Hanya admin yang bisa tambah/edit/hapus produk
+      allow create: if isAdmin() && validProductData();
+      allow update: if isAdmin() && validProductData();
+      allow delete: if isAdmin();
+    }
+
+    // ============================================================
+    // COLLECTION: storeSettings
+    // ============================================================
+    match /storeSettings/{docId} {
+      // Publik bisa baca (info kontak toko)
+      allow read: if true;
+      // Hanya admin yang bisa ubah
+      allow write: if isAdmin();
+    }
+
+    // ============================================================
+    // COLLECTION: loginLogs
+    // ============================================================
+    match /loginLogs/{logId} {
+      // Hanya admin yang bisa baca log
+      allow read: if isAdmin();
+      // User aktif hanya bisa buat log untuk dirinya sendiri
+      allow create: if isAuthenticated() &&
+                       isActiveUser() &&
+                       request.resource.data.uid == request.auth.uid &&
+                       request.resource.data.email == request.auth.token.email;
+      // Log tidak boleh diubah atau dihapus (immutable)
+      allow update, delete: if false;
+    }
+
+    // ============================================================
+    // COLLECTION: stockLogs
+    // ============================================================
+    match /stockLogs/{logId} {
+      // Hanya admin yang bisa baca & tulis log stok
+      allow read: if isAdmin();
+      allow create: if isAdmin();
+      // Log stok tidak boleh diubah atau dihapus
+      allow update, delete: if false;
+    }
+
+    // ============================================================
+    // DEFAULT: Semua koleksi lain DITOLAK
+    // ============================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+  }
+}

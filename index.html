@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kentang Emas | Keripik Kentang Premium</title>
+    <meta name="description" content="Nikmati kelezatan keripik kentang premium dengan bahan pilihan berkualitas. Kentang Emas, renyah dan gurih di setiap gigitan.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ── Skeleton Loading ── */
+        .skeleton-card { pointer-events: none; }
+        .skeleton-img {
+            width: 100%; height: 220px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 12px; margin-bottom: 16px;
+        }
+        .skeleton-body { padding: 0 4px; }
+        .skeleton-line {
+            height: 14px; border-radius: 6px; margin-bottom: 10px;
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        .skeleton-line.w70 { width: 70%; }
+        .skeleton-line.w100 { width: 100%; }
+        .skeleton-line.w50 { width: 50%; }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ── Filter Buttons ── */
+        .varian-filter {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            justify-content: center; margin-bottom: 32px;
+        }
+        .filter-btn {
+            padding: 8px 20px; border-radius: 99px;
+            border: 1.5px solid #E0E0E0;
+            background: white; color: #666;
+            font-size: .875rem; font-weight: 500;
+            cursor: pointer; transition: all .25s;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: #F6A90A; border-color: #F6A90A;
+            color: white;
+        }
+
+        /* ── Product Card Extra ── */
+        .product-badge {
+            display: inline-block; padding: 3px 10px;
+            border-radius: 99px; font-size: .72rem; font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .badge-tersedia { background: #F0FFF4; color: #276749; }
+        .badge-habis    { background: #FFF5F5; color: #C53030; }
+        .product-varians {
+            display: flex; flex-wrap: wrap; gap: 4px;
+            margin: 8px 0;
+        }
+        .varian-chip {
+            padding: 3px 10px; background: #FFF3CD;
+            color: #744210; border-radius: 99px;
+            font-size: .72rem; font-weight: 600;
+        }
+        .product-price {
+            font-size: 1.1rem; font-weight: 700;
+            color: #F6A90A; margin: 8px 0 4px;
+        }
+        .product-weight {
+            font-size: .82rem; color: #999;
+            margin-bottom: 12px;
+        }
+        .btn-wa {
+            display: flex; align-items: center; gap: 6px;
+            width: 100%; justify-content: center;
+            padding: 10px; border-radius: 8px;
+            background: #25D366; color: white;
+            font-weight: 600; font-size: .875rem;
+            border: none; cursor: pointer;
+            text-decoration: none;
+            transition: background .25s;
+        }
+        .btn-wa:hover { background: #1DA851; }
+        .btn-wa.disabled {
+            background: #ccc; cursor: not-allowed;
+            pointer-events: none;
+        }
+        .product-card[data-hidden="true"] { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-leaf logo-icon"></i>
+                <span>Kentang<span class="text-gold">Emas</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="#beranda" class="active">Beranda</a>
+                <a href="#tentang">Tentang Kami</a>
+                <a href="#produk">Katalog Produk</a>
+                <a href="#galeri">Galeri</a>
+                <a href="#kontak">Kontak</a>
+                <a href="login-unified.html" style="color: var(--color-primary); font-weight: bold;"><i class="fa-solid fa-circle-user"></i> Login</a>
+            </div>
+            <div class="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <span class="badge">100% Kentang Asli</span>
+                <h1>Sensasi Renyah <br>di Setiap Gigitan</h1>
+                <p>Keripik kentang premium yang dibuat dari kentang pilihan terbaik, digoreng dengan suhu sempurna, dan dibumbui dengan rempah alami. Nikmati kelezatannya bersama keluarga.</p>
+                <div class="hero-buttons">
+                    <a href="#produk" class="btn btn-primary">Lihat Varian Rasa</a>
+                    <a href="#tentang" class="btn btn-outline">Kenali Kami</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="assets/images/hero.png" alt="Keripik Kentang Emas">
+            </div>
+        </div>
+    </section>
+
+    <!-- Features / About Section -->
+    <section id="tentang" class="about section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Mengapa Memilih Kami?</h2>
+                <p>Kami mendedikasikan diri untuk memberikan kualitas ngemil terbaik untuk Anda.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-seedling"></i></div>
+                    <h3>Bahan Pilihan</h3>
+                    <p>Hanya menggunakan kentang segar berkualitas tinggi dari petani lokal terpercaya.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-fire-burner"></i></div>
+                    <h3>Renyah Sempurna</h3>
+                    <p>Digoreng dengan teknik khusus dan minyak sehat untuk tekstur yang sangat renyah.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-heart"></i></div>
+                    <h3>Tanpa Pengawet</h3>
+                    <p>Aman dikonsumsi setiap hari karena kami tidak menggunakan bahan pengawet buatan.</p>
+                </div>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Cerita Kentang Emas</h3>
+                    <p>Bermula dari kecintaan kami terhadap camilan berkualitas, Kentang Emas hadir sejak tahun 2018. Kami percaya bahwa setiap orang berhak menikmati keripik kentang yang tidak hanya enak, tapi juga dibuat dengan bahan-bahan yang jelas asal-usulnya. Dengan perpaduan resep tradisional dan teknologi modern, kami memproduksi keripik kentang yang konsisten dalam rasa dan kualitas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Catalog Section -->
+    <section id="produk" class="products section bg-light">
+        <div class="container">
+            <div class="section-title">
+                <h2>Katalog Produk</h2>
+                <p id="catalogSubtitle">Temukan varian rasa favorit yang siap menemani momen santaimu.</p>
+            </div>
+
+            <!-- Filter Rasa -->
+            <div id="varianFilter" class="varian-filter">
+                <button class="filter-btn active" data-filter="all">Semua</button>
+            </div>
+
+            <!-- Products Grid dinamis dari Firebase -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Skeleton loading -->
+                <div class="product-card skeleton-card">
+                    <div class="skeleton-img"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line w70"></div>
+                        <div class="skeleton-line w100"></div>
+                        <div class="skeleton-line w50"></div>
+                    </div>
+                </div>
+                <div class="product-card skeleton-card">
+                    <div class="skeleton-img"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line w70"></div>
+                        <div class="skeleton-line w100"></div>
+                        <div class="skeleton-line w50"></div>
+                    </div>
+                </div>
+                <div class="product-card skeleton-card">
+                    <div class="skeleton-img"></div>
+                    <div class="skeleton-body">
+                        <div class="skeleton-line w70"></div>
+                        <div class="skeleton-line w100"></div>
+                        <div class="skeleton-line w50"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="productsEmpty" style="display:none;text-align:center;padding:60px 0">
+                <i class="fa-solid fa-box-open" style="font-size:3rem;color:#ddd;margin-bottom:16px;display:block"></i>
+                <p style="color:#999;font-size:1rem">Belum ada produk tersedia saat ini.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Gallery Section -->
+    <section id="galeri" class="gallery section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Galeri & Berita</h2>
+                <p>Intip proses pembuatan kami dan dapatkan kabar terbaru.</p>
+            </div>
+            <div class="gallery-news-wrapper">
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <img src="assets/images/gallery_farm.png" alt="Ladang Kentang">
+                        <div class="gallery-overlay">
+                            <span>Peternakan Mitra Kami</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/images/gallery_process.png" alt="Proses Pemotongan">
+                        <div class="gallery-overlay">
+                            <span>Proses Higienis</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/images/hero.png" alt="Hasil Jadi">
+                        <div class="gallery-overlay">
+                            <span>Siap Dinikmati</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-list">
+                    <div class="news-item">
+                        <span class="news-date">10 Oktober 2026</span>
+                        <h4>Hadir di Pameran Kuliner Nusantara</h4>
+                        <p>Kunjungi booth kami di JCC Senayan akhir pekan ini. Ada tester gratis!</p>
+                    </div>
+                    <div class="news-item">
+                        <span class="news-date">15 September 2026</span>
+                        <h4>Kemasan Baru, Kualitas Tetap Nomor 1</h4>
+                        <p>Kami baru saja meluncurkan desain kemasan baru yang lebih eco-friendly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="kontak" class="contact section bg-light">
+        <div class="container">
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h2>Hubungi Kami</h2>
+                    <p>Ingin bekerja sama, menjadi reseller, atau sekadar menyapa? Jangan ragu untuk menghubungi kami melalui kontak di bawah ini.</p>
+                    <ul class="contact-list">
+                        <li>
+                            <i class="fa-solid fa-location-dot"></i>
+                            <span>Jl. Makanan Ringan No. 45, Bandung, Jawa Barat</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-phone"></i>
+                            <span>+62 812 3456 7890</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>halo@kentangemas.id</span>
+                        </li>
+                    </ul>
+                    <div class="social-links">
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                        <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="contact-map">
+                    <div class="map-placeholder">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <p>Peta Lokasi Usaha Kami</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <i class="fa-solid fa-leaf logo-icon"></i>
+                    <span>Kentang<span class="text-gold">Emas</span></span>
+                </a>
+                <p>Camilan berkualitas untuk setiap suasana. Menyatukan rasa dan tradisi dalam satu gigitan renyah.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Tautan Cepat</h3>
+                <a href="#beranda">Beranda</a>
+                <a href="#tentang">Tentang Kami</a>
+                <a href="#produk">Produk</a>
+                <a href="#galeri">Galeri</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Kentang Emas. Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+    <!-- Custom JS -->
+    <script src="js/script.js"></script>
+
+    <!-- Firebase: Katalog Dinamis -->
+    <script type="module">
+        import { db } from './js/firebase-config.js';
+        import {
+            collection, onSnapshot, doc, getDoc
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        let allProducts = [];
+        let activeFilter = 'all';
+        let waNumber = '';
+
+        // ── Load store contact (WhatsApp number) ──
+        getDoc(doc(db, 'storeSettings', 'contact')).then(snap => {
+            if (snap.exists()) {
+                const d = snap.data();
+                waNumber = d.whatsapp ? '62' + d.whatsapp.replace(/^0/, '') : '';
+                // Update contact section if elements exist
+                if (d.whatsapp) {
+                    document.querySelectorAll('.contact-wa, [data-wa]').forEach(el => {
+                        el.href = `https://wa.me/${waNumber}`;
+                    });
+                }
+            }
+        }).catch(() => {});
+
+        // ── Real-time listener dari Firestore (tanpa composite index) ──
+        const q = collection(db, 'products');
+
+        onSnapshot(q, (snap) => {
+            allProducts = [];
+            const varianSet = new Set();
+
+            snap.forEach(d => {
+                const p = { id: d.id, ...d.data() };
+                // Hanya tampilkan produk yang aktif
+                if (p.isActive === false) return;
+                allProducts.push(p);
+                p.variants?.forEach(v => { if (v.rasa) varianSet.add(v.rasa); });
+            });
+
+            // Sort client-side by createdAt descending
+            allProducts.sort((a, b) =>
+                (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+            buildFilterBtns([...varianSet]);
+            renderProducts();
+        }, (err) => {
+            console.error('Firestore error:', err);
+            // Jika Firestore error, sembunyikan skeleton
+            document.getElementById('productsGrid').innerHTML = '';
+            document.getElementById('productsEmpty').style.display = 'block';
+        });
+
+        // ── Build Filter Buttons ──
+        function buildFilterBtns(varians) {
+            const container = document.getElementById('varianFilter');
+            container.innerHTML = `<button class="filter-btn active" data-filter="all">Semua</button>`;
+            varians.forEach(v => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.dataset.filter = v;
+                btn.textContent = v;
+                btn.onclick = () => setFilter(v, btn);
+                container.appendChild(btn);
+            });
+            container.querySelector('[data-filter="all"]').onclick = () =>
+                setFilter('all', container.querySelector('[data-filter="all"]'));
+        }
+
+        function setFilter(filter, btn) {
+            activeFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderProducts();
+        }
+
+        // ── Render Product Cards ──
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const emptyEl = document.getElementById('productsEmpty');
+
+            const filtered = activeFilter === 'all'
+                ? allProducts
+                : allProducts.filter(p =>
+                    p.variants?.some(v => v.rasa === activeFilter));
+
+            if (!filtered.length) {
+                grid.innerHTML = '';
+                emptyEl.style.display = 'block';
+                return;
+            }
+            emptyEl.style.display = 'none';
+            grid.innerHTML = '';
+
+            filtered.forEach(p => {
+                // Filter variants by active filter
+                const shownVariants = activeFilter === 'all'
+                    ? (p.variants || [])
+                    : (p.variants || []).filter(v => v.rasa === activeFilter);
+
+                const totalStok = shownVariants.reduce((s, v) => s + (v.stok || 0), 0);
+                const minHarga  = shownVariants.length
+                    ? Math.min(...shownVariants.map(v => v.harga || 0))
+                    : 0;
+                const maxHarga  = shownVariants.length
+                    ? Math.max(...shownVariants.map(v => v.harga || 0))
+                    : 0;
+                const minBerat  = shownVariants.length
+                    ? Math.min(...shownVariants.map(v => v.berat || 0))
+                    : 0;
+
+                const hargaText = minHarga === maxHarga
+                    ? formatRp(minHarga)
+                    : `${formatRp(minHarga)} – ${formatRp(maxHarga)}`;
+
+                const isHabis = totalStok === 0;
+
+                const varianChips = (p.variants || [])
+                    .map(v => `<span class="varian-chip">${v.rasa}</span>`).join('');
+
+                const waMsg = encodeURIComponent(
+                    `Halo, saya ingin memesan *${p.name}*. Apakah masih tersedia?`);
+                const waLink = waNumber
+                    ? `https://wa.me/${waNumber}?text=${waMsg}`
+                    : `https://wa.me/?text=${waMsg}`;
+
+                const imgSrc = p.imageUrl ||
+                    `https://via.placeholder.com/400x300?text=${encodeURIComponent(p.name)}`;
+
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-img-wrap">
+                        <img src="${imgSrc}" alt="${p.name}"
+                             onerror="this.src='https://via.placeholder.com/400x300?text=Produk'">
+                        ${isHabis ? '<div style="position:absolute;top:12px;right:12px"><span class="product-badge badge-habis">Stok Habis</span></div>' : ''}
+                    </div>
+                    <div class="product-info">
+                        <h3>${p.name}</h3>
+                        ${p.description ? `<p>${p.description}</p>` : ''}
+                        <div class="product-varians">${varianChips}</div>
+                        <div class="product-price">${hargaText}</div>
+                        ${minBerat ? `<div class="product-weight"><i class="fa-solid fa-scale-balanced" style="margin-right:4px"></i>Netto: ${minBerat}g</div>` : ''}
+                        <a href="${waLink}" target="_blank"
+                           class="btn-wa ${isHabis ? 'disabled' : ''}">
+                            <i class="fa-brands fa-whatsapp"></i>
+                            ${isHabis ? 'Stok Habis' : 'Pesan via WhatsApp'}
+                        </a>
+                    </div>`;
+
+                // Position relative for the badge overlay
+                card.querySelector('.product-img-wrap').style.position = 'relative';
+                grid.appendChild(card);
+            });
+        }
+
+        function formatRp(n) {
+            return 'Rp\u00A0' + (n || 0).toLocaleString('id-ID');
+        }
+    </script>
+</body>
+</html>

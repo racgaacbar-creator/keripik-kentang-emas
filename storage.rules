@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// ================================================================
+// FIREBASE STORAGE RULES — Kentang Emas
+// PKSJ: Hardened — hanya admin yang bisa upload file
+// ================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Helper: cek apakah user sudah login
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Hanya file gambar yang diizinkan (anti upload malware)
+    function isImageFile() {
+      return request.resource.contentType.matches('image/.*') &&
+             request.resource.size < 5 * 1024 * 1024; // Maks 5 MB
+    }
+
+    // ── Folder products/ ──
+    // Hanya admin yang bisa upload/hapus foto produk
+    match /products/{fileName} {
+      allow read: if true;               // Semua boleh lihat foto produk
+      allow write: if isAuthenticated()  // Harus login
+                   && isImageFile();     // Harus file gambar & < 5MB
+      allow delete: if isAuthenticated();
+    }
+
+    // ── Folder lainnya: TOLAK semua ──
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

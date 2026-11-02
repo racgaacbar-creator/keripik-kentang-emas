@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Kentang Emas</title>
+    <meta name="description" content="Panel administrasi toko Kentang Emas">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><i class="fa-solid fa-wheat-awn"></i></div>
+                <div class="logo-text">
+                    <span class="logo-brand">KentangEmas</span>
+                    <span class="logo-sub">Admin Panel</span>
+                </div>
+            </div>
+            <button class="sidebar-close-btn" id="sidebarCloseBtn" title="Tutup sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-group">
+                <p class="nav-group-label">Menu Utama</p>
+                <a href="#" class="nav-item active" data-section="dashboard" id="nav-dashboard">
+                    <i class="fa-solid fa-gauge-high"></i><span>Dashboard</span>
+                </a>
+            </div>
+            <div class="nav-group">
+                <p class="nav-group-label">Produk & Stok</p>
+                <a href="#" class="nav-item" data-section="products" id="nav-products">
+                    <i class="fa-solid fa-box-open"></i><span>Daftar Produk</span>
+                </a>
+                <a href="#" class="nav-item" data-section="add-product" id="nav-add-product">
+                    <i class="fa-solid fa-circle-plus"></i><span>Tambah Produk</span>
+                </a>
+                <a href="#" class="nav-item" data-section="stock" id="nav-stock">
+                    <i class="fa-solid fa-warehouse"></i><span>Manajemen Stok</span>
+                </a>
+            </div>
+            <div class="nav-group">
+                <p class="nav-group-label">Pengguna</p>
+                <a href="#" class="nav-item" data-section="users" id="nav-users">
+                    <i class="fa-solid fa-users"></i><span>Manajemen Pengguna</span>
+                </a>
+                <a href="#" class="nav-item" data-section="login-logs" id="nav-login-logs">
+                    <i class="fa-solid fa-clock-rotate-left"></i><span>Riwayat Login</span>
+                </a>
+            </div>
+            <div class="nav-group">
+                <p class="nav-group-label">Pengaturan</p>
+                <a href="#" class="nav-item" data-section="contact" id="nav-contact">
+                    <i class="fa-solid fa-address-book"></i><span>Pengaturan Kontak</span>
+                </a>
+                <a href="#" class="nav-item" data-section="store-settings" id="nav-store-settings">
+                    <i class="fa-solid fa-gear"></i><span>Pengaturan Toko</span>
+                </a>
+            </div>
+            <div class="nav-group nav-bottom-group">
+                <a href="index.html" class="nav-item" target="_blank">
+                    <i class="fa-solid fa-store"></i><span>Lihat Toko</span>
+                </a>
+                <a href="#" class="nav-item nav-logout" id="btnLogout">
+                    <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- ===== MAIN WRAPPER ===== -->
+    <div class="main-wrapper" id="mainWrapper">
+
+        <!-- TOP NAVBAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger-btn" id="hamburgerBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <nav class="breadcrumb-nav">
+                    <span class="breadcrumb-home">Admin</span>
+                    <i class="fa-solid fa-chevron-right breadcrumb-sep"></i>
+                    <span class="breadcrumb-current" id="breadcrumbCurrent">Dashboard</span>
+                </nav>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-notif-wrap">
+                    <button class="topbar-icon-btn" id="notifBtn" title="Notifikasi">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notif-dot" id="notifDot" style="display:none"></span>
+                    </button>
+                    <!-- Notif Dropdown -->
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-header">
+                            <h4>Notifikasi</h4>
+                        </div>
+                        <div id="notifList">
+                            <div class="notif-empty">Tidak ada notifikasi</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="topbar-profile-wrap">
+                    <button class="topbar-profile" id="profileBtn">
+                        <div class="profile-avatar" id="profileAvatar">A</div>
+                        <div class="profile-info">
+                            <span class="profile-name" id="profileName">Admin</span>
+                            <span class="profile-role">Administrator</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-header">
+                            <div class="profile-avatar-lg" id="profileAvatarLg">A</div>
+                            <div>
+                                <p class="pd-name" id="pdName">Admin</p>
+                                <p class="pd-email" id="pdEmail">—</p>
+                            </div>
+                        </div>
+                        <a href="#" class="pd-item" onclick="navigateTo('store-settings')">
+                            <i class="fa-solid fa-gear"></i> Pengaturan
+                        </a>
+                        <a href="#" class="pd-item pd-logout" id="btnLogout2">
+                            <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <main class="content-area">
+
+            <!-- ============================================================
+                 SECTION: DASHBOARD
+            ============================================================ -->
+            <section id="section-dashboard" class="content-section active">
+                <div class="section-header">
+                    <div>
+                        <h2>Dashboard</h2>
+                        <p>Ringkasan data toko Kentang Emas</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-primary" onclick="navigateTo('add-product')">
+                            <i class="fa-solid fa-plus"></i> Tambah Produk
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="navigateTo('products')">
+                        <div class="stat-icon icon-gold"><i class="fa-solid fa-box"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Total Produk</p>
+                            <h3 class="stat-value" id="statTotalProduk"><span class="skeleton-text">—</span></h3>
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="navigateTo('stock')">
+                        <div class="stat-icon icon-orange"><i class="fa-solid fa-layer-group"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Total Stok</p>
+                            <h3 class="stat-value" id="statTotalStok"><span class="skeleton-text">—</span></h3>
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="navigateTo('stock')">
+                        <div class="stat-icon icon-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Stok Menipis</p>
+                            <h3 class="stat-value" id="statStokMenipis"><span class="skeleton-text">—</span></h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-purple"><i class="fa-solid fa-tags"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Jumlah Varian</p>
+                            <h3 class="stat-value" id="statVarian"><span class="skeleton-text">—</span></h3>
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="navigateTo('users')">
+                        <div class="stat-icon icon-blue"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Total Pengguna</p>
+                            <h3 class="stat-value" id="statTotalUsers"><span class="skeleton-text">—</span></h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-green"><i class="fa-solid fa-circle-dot"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Pengguna Online</p>
+                            <h3 class="stat-value" id="statOnlineUsers"><span class="skeleton-text">—</span></h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-teal"><i class="fa-solid fa-user-plus"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Pengguna Baru Hari Ini</p>
+                            <h3 class="stat-value" id="statNewUsers"><span class="skeleton-text">—</span></h3>
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="navigateTo('login-logs')">
+                        <div class="stat-icon icon-brown"><i class="fa-solid fa-right-to-bracket"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Login Hari Ini</p>
+                            <h3 class="stat-value" id="statLoginToday"><span class="skeleton-text">—</span></h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Grid -->
+                <div class="dashboard-grid-bottom">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-sparkles"></i> Produk Terbaru</h3>
+                            <a href="#" class="panel-link" onclick="navigateTo('products')">Lihat semua</a>
+                        </div>
+                        <div id="recentProductsList" class="item-list">
+                            <div class="loading-item"></div><div class="loading-item"></div><div class="loading-item"></div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-triangle-exclamation text-warning"></i> Peringatan Stok</h3>
+                        </div>
+                        <div id="lowStockList" class="item-list">
+                            <div class="loading-item"></div><div class="loading-item"></div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-clock-rotate-left"></i> Aktivitas Terbaru</h3>
+                            <a href="#" class="panel-link" onclick="navigateTo('login-logs')">Lihat semua</a>
+                        </div>
+                        <div id="recentActivityList" class="activity-feed">
+                            <div class="loading-item"></div><div class="loading-item"></div><div class="loading-item"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION: DAFTAR PRODUK
+            ============================================================ -->
+            <section id="section-products" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Daftar Produk</h2>
+                        <p>Kelola semua produk toko Anda</p>
+                    </div>
+                    <button class="btn-primary" onclick="navigateTo('add-product')">
+                        <i class="fa-solid fa-plus"></i> Tambah Produk
+                    </button>
+                </div>
+                <div class="filter-bar">
+                    <div class="search-wrap">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="productSearch" placeholder="Cari nama atau SKU...">
+                    </div>
+                    <select id="filterVarian">
+                        <option value="">Semua Varian</option>
+                        <option>Original</option><option>Balado</option><option>Barbeque</option>
+                        <option>Keju</option><option>Pedas</option><option>Jagung Bakar</option>
+                    </select>
+                    <select id="filterStok">
+                        <option value="">Semua Stok</option>
+                        <option value="tersedia">Tersedia</option>
+                        <option value="menipis">Menipis</option>
+                        <option value="habis">Habis</option>
+                    </select>
+                    <select id="sortProduk">
+                        <option value="newest">Terbaru</option>
+                        <option value="name">Nama A-Z</option>
+                        <option value="price-asc">Harga ↑</option>
+                        <option value="price-desc">Harga ↓</option>
+                        <option value="stock-asc">Stok ↑</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Gambar</th>
+                                <th>Nama Produk</th>
+                                <th>SKU</th>
+                                <th>Varian</th>
+                                <th>Harga</th>
+                                <th>Stok Total</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody"></tbody>
+                    </table>
+                    <div id="productsEmpty" class="empty-state" style="display:none">
+                        <i class="fa-solid fa-box-open"></i>
+                        <p>Belum ada produk</p>
+                        <button class="btn-primary" onclick="navigateTo('add-product')">Tambah Produk Pertama</button>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span id="productsCountText">0 produk</span>
+                    <div class="pagination" id="productsPagination"></div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION: TAMBAH / EDIT PRODUK
+            ============================================================ -->
+            <section id="section-add-product" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h2 id="productFormTitle">Tambah Produk Baru</h2>
+                        <p id="productFormSubtitle">Isi detail produk di bawah ini</p>
+                    </div>
+                </div>
+                <div class="form-page-container">
+                    <form id="productForm" novalidate>
+                        <input type="hidden" id="editProductId" value="">
+
+                        <!-- Gambar -->
+                        <div class="form-card">
+                            <h4 class="form-card-title"><i class="fa-solid fa-image"></i> Gambar Produk</h4>
+                            <div class="image-upload-zone" id="imageUploadZone">
+                                <div id="uploadPlaceholder" class="upload-placeholder">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    <p>Klik atau seret gambar ke sini</p>
+                                    <small>Format: JPG, PNG, WEBP &bull; Maks. 5MB</small>
+                                </div>
+                                <div id="imagePreviewWrap" class="image-preview-wrap" style="display:none">
+                                    <img id="imagePreview" src="" alt="Preview Gambar">
+                                    <button type="button" id="removeImageBtn" class="remove-img-btn" title="Hapus gambar">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                                <input type="file" id="productImageInput" accept=".jpg,.jpeg,.png,.webp" style="display:none">
+                            </div>
+                            <div class="upload-progress-wrap" id="uploadProgressWrap" style="display:none">
+                                <div class="upload-progress-bar">
+                                    <div class="upload-progress-fill" id="uploadProgressFill" style="width:0%"></div>
+                                </div>
+                                <span id="uploadProgressText">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- Info Dasar -->
+                        <div class="form-card">
+                            <h4 class="form-card-title"><i class="fa-solid fa-info-circle"></i> Informasi Produk</h4>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="prodNama">Nama Produk <span class="req">*</span></label>
+                                    <input type="text" id="prodNama" placeholder="Contoh: Keripik Kentang Original" required>
+                                    <p class="form-err" id="errNama"></p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prodSKU">Kode SKU <span class="req">*</span></label>
+                                    <input type="text" id="prodSKU" placeholder="Contoh: KKE-001" required>
+                                    <p class="form-err" id="errSKU"></p>
+                                </div>
+                                <div class="form-group full-span">
+                                    <label for="prodDeskripsi">Deskripsi Produk</label>
+                                    <textarea id="prodDeskripsi" rows="4" placeholder="Tulis deskripsi produk..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prodStatus">Status Produk</label>
+                                    <select id="prodStatus">
+                                        <option value="true">Aktif</option>
+                                        <option value="false">Nonaktif</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Varian Rasa -->
+                        <div class="form-card">
+                            <div class="form-card-header">
+                                <h4 class="form-card-title"><i class="fa-solid fa-tags"></i> Varian Rasa</h4>
+                                <button type="button" class="btn-outline btn-sm" id="addVariantBtn">
+                                    <i class="fa-solid fa-plus"></i> Tambah Varian
+                                </button>
+                            </div>
+                            <p class="form-hint">Tambahkan minimal 1 varian rasa. Setiap varian memiliki harga, berat, dan stok sendiri.</p>
+                            <div id="variantsList"></div>
+                            <p class="form-err" id="errVariants"></p>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="form-actions-bar">
+                            <button type="submit" class="btn-primary" id="btnSaveProduct">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span id="btnSaveText">Simpan Produk</span>
+                            </button>
+                            <button type="button" class="btn-outline" id="btnResetForm">
+                                <i class="fa-solid fa-rotate-left"></i> Reset Form
+                            </button>
+                            <button type="button" class="btn-ghost" onclick="navigateTo('products')">
+                                <i class="fa-solid fa-xmark"></i> Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION: MANAJEMEN STOK
+            ============================================================ -->
+            <section id="section-stock" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Manajemen Stok</h2>
+                        <p>Pantau dan kelola stok semua varian produk</p>
+                    </div>
+                </div>
+                <!-- Stock Stats -->
+                <div class="stock-stats-row">
+                    <div class="stock-stat-card">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <div><p>Total Stok</p><h3 id="ssTotal">—</h3></div>
+                    </div>
+                    <div class="stock-stat-card warning">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div><p>Stok Menipis</p><h3 id="ssLow">—</h3></div>
+                    </div>
+                    <div class="stock-stat-card danger">
+                        <i class="fa-solid fa-ban"></i>
+                        <div><p>Stok Habis</p><h3 id="ssEmpty">—</h3></div>
+                    </div>
+                    <div class="stock-stat-card info">
+                        <i class="fa-solid fa-sliders"></i>
+                        <div>
+                            <p>Batas Min. Stok</p>
+                            <div class="min-stock-wrap">
+                                <input type="number" id="minStokInput" value="10" min="1" max="999">
+                                <span>unit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Stok Per Varian</h3>
+                        <div class="search-wrap">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="stockSearch" placeholder="Cari produk...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>No</th><th>Produk</th><th>Varian Rasa</th>
+                                    <th>Harga</th><th>Stok</th><th>Status</th><th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stockTableBody"></tbody>
+                        </table>
+                        <div id="stockEmpty" class="empty-state" style="display:none">
+                            <i class="fa-solid fa-warehouse"></i>
+                            <p>Belum ada data stok</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Perubahan Stok</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th><th>Produk</th><th>Varian</th>
+                                    <th>Perubahan</th><th>Sebelum</th><th>Sesudah</th><th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stockLogBody"></tbody>
+                        </table>
+                        <div id="stockLogEmpty" class="empty-state" style="display:none">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <p>Belum ada riwayat perubahan stok</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION: MANAJEMEN PENGGUNA
+            ============================================================ -->
+            <section id="section-users" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Manajemen Pengguna</h2>
+                        <p>Lihat dan kelola akun pengguna terdaftar</p>
+                    </div>
+                </div>
+                <div class="filter-bar">
+                    <div class="search-wrap">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="userSearch" placeholder="Cari nama, email, atau UID...">
+                    </div>
+                    <select id="filterUserStatus">
+                        <option value="">Semua Status</option>
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Nonaktif</option>
+                    </select>
+                    <select id="filterOnline">
+                        <option value="">Semua</option>
+                        <option value="online">Online</option>
+                        <option value="offline">Offline</option>
+                    </select>
+                    <select id="sortUsers">
+                        <option value="newest">Terbaru</option>
+                        <option value="oldest">Terlama</option>
+                        <option value="lastLogin">Login Terakhir</option>
+                        <option value="name">Nama A-Z</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No</th><th>Pengguna</th><th>Email</th><th>UID</th>
+                                <th>Terdaftar</th><th>Login Terakhir</th>
+                                <th>Status</th><th>Online</th><th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                    <div id="usersEmpty" class="empty-state" style="display:none">
+                        <i class="fa-solid fa-users"></i>
+                        <p>Belum ada pengguna terdaftar</p>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span id="usersCountText">0 pengguna</span>
+                    <div class="pagination" id="usersPagination"></div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION: RIWAYAT LOGIN
+            ============================================================ -->
+            <section id="section-login-logs" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Riwayat Login</h2>
+                        <p>Rekam jejak aktivitas autentikasi pengguna</p>
+                    </div>
+                </div>
+                <div class="filter-bar">
+                    <div class="search-wrap">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="logSearch" placeholder="Cari email atau nama...">
+                    </div>
+                    <input type="date" id="logDateFrom" title="Dari tanggal">
+                    <input type="date" id="logDateTo" title="Sampai tanggal">
+                    <select id="filterLogEvent">
+                        <option value="">Semua Event</option>
+                        <option value="login">Login</option>
+                        <option value="logout">Logout</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No</th><th>Pengguna</th><th>Email</th>
+                                <th>Waktu</th><th>Event</th>
+                            </tr>
+                        </thead>
+                        <tbody id="loginLogsBody"></tbody>
+                    </table>
+                    <div id="logsEmpty" class="empty-state" style="display:none">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <p>Belum ada riwayat login</p>
+                    </div>
+                </div>
+                <div class="table-footer">
+                    <span id="logsCountText">0 aktivitas</span>
+                    <div class="pagination" id="logsPagination"></div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION: PENGATURAN KONTAK
+            ============================================================ -->
+            <section id="section-contact" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Pengaturan Kontak</h2>
+                        <p>Informasi kontak toko yang ditampilkan ke pelanggan</p>
+                    </div>
+                </div>
+                <div class="form-page-container">
+                    <form id="contactForm" novalidate>
+                        <div class="form-card">
+                            <h4 class="form-card-title"><i class="fa-solid fa-store"></i> Informasi Toko</h4>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="konNamaToko">Nama Toko <span class="req">*</span></label>
+                                    <input type="text" id="konNamaToko" placeholder="Contoh: Kentang Emas">
+                                </div>
+                                <div class="form-group full-span">
+                                    <label for="konAlamat">Alamat Toko</label>
+                                    <textarea id="konAlamat" rows="3" placeholder="Jl. Contoh No. 1, Bandung, Jawa Barat"></textarea>
+                                </div>
+                                <div class="form-group full-span">
+                                    <label for="konPesan">Pesan Sambutan</label>
+                                    <textarea id="konPesan" rows="3" placeholder="Pesan yang ditampilkan di halaman utama..."></textarea>
+                                </div>
+                                <div class="form-group full-span">
+                                    <label for="konInfo">Informasi Tambahan</label>
+                                    <textarea id="konInfo" rows="2" placeholder="Jam buka, kebijakan pengiriman, dll."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-card">
+                            <h4 class="form-card-title"><i class="fa-solid fa-phone"></i> Kontak</h4>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="konWhatsapp">Nomor WhatsApp</label>
+                                    <div class="input-with-prefix">
+                                        <span class="input-prefix">+62</span>
+                                        <input type="text" id="konWhatsapp" placeholder="812-3456-7890">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="konTelepon">Nomor Telepon</label>
+                                    <input type="text" id="konTelepon" placeholder="022-1234567">
+                                </div>
+                                <div class="form-group">
+                                    <label for="konEmail">Email Toko</label>
+                                    <input type="email" id="konEmail" placeholder="halo@kentangemas.id">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-card">
+                            <h4 class="form-card-title"><i class="fa-solid fa-hashtag"></i> Media Sosial</h4>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="konInstagram">Instagram</label>
+                                    <div class="input-with-prefix">
+                                        <span class="input-prefix">@</span>
+                                        <input type="text" id="konInstagram" placeholder="username_instagram">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="konFacebook">Facebook</label>
+                                    <input type="text" id="konFacebook" placeholder="Nama halaman Facebook">
+                                </div>
+                                <div class="form-group">
+                                    <label for="konTiktok">TikTok</label>
+                                    <div class="input-with-prefix">
+                                        <span class="input-prefix">@</span>
+                                        <input type="text" id="konTiktok" placeholder="username_tiktok">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions-bar">
+                            <button type="submit" class="btn-primary">
+                                <i class="fa-solid fa-floppy-disk"></i> Simpan Kontak
+                            </button>
+                            <button type="button" class="btn-outline" id="resetContactBtn">
+                                <i class="fa-solid fa-rotate-left"></i> Reset Perubahan
+                            </button>
+                            <button type="button" class="btn-ghost" onclick="navigateTo('dashboard')">
+                                <i class="fa-solid fa-xmark"></i> Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION: PENGATURAN TOKO
+            ============================================================ -->
+            <section id="section-store-settings" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Pengaturan Toko</h2>
+                        <p>Konfigurasi umum toko Anda</p>
+                    </div>
+                </div>
+                <div class="form-page-container">
+                    <form id="storeSettingsForm">
+                        <div class="form-card">
+                            <h4 class="form-card-title"><i class="fa-solid fa-gear"></i> Pengaturan Umum</h4>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label for="setNamaToko">Nama Toko</label>
+                                    <input type="text" id="setNamaToko" placeholder="Kentang Emas">
+                                </div>
+                                <div class="form-group">
+                                    <label for="setTagline">Tagline</label>
+                                    <input type="text" id="setTagline" placeholder="Renyah, Gurih, Berkualitas">
+                                </div>
+                                <div class="form-group">
+                                    <label for="setMinStok">Batas Minimum Stok (unit)</label>
+                                    <input type="number" id="setMinStok" value="10" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label for="setStatusToko">Status Toko</label>
+                                    <select id="setStatusToko">
+                                        <option value="open">Buka</option>
+                                        <option value="closed">Tutup Sementara</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-actions-bar">
+                            <button type="submit" class="btn-primary">
+                                <i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div><!-- end main-wrapper -->
+
+    <!-- ===== SIDEBAR OVERLAY (mobile) ===== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===== MODALS ===== -->
+
+    <!-- Modal Konfirmasi Hapus Produk -->
+    <div class="modal-backdrop" id="modalDelete">
+        <div class="modal-box">
+            <div class="modal-icon-wrap danger">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <h3>Hapus Produk?</h3>
+            <p id="deleteConfirmMsg">Apakah Anda yakin ingin menghapus produk ini? Tindakan tidak dapat dibatalkan.</p>
+            <div class="modal-btn-row">
+                <button class="btn-danger" id="confirmDeleteBtn">
+                    <i class="fa-solid fa-trash-can"></i> Ya, Hapus
+                </button>
+                <button class="btn-ghost" onclick="closeModal('modalDelete')">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Produk -->
+    <div class="modal-backdrop" id="modalProductDetail">
+        <div class="modal-box modal-lg">
+            <div class="modal-top-bar">
+                <h3>Detail Produk</h3>
+                <button class="modal-x-btn" onclick="closeModal('modalProductDetail')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="productDetailContent" class="modal-body-scroll"></div>
+        </div>
+    </div>
+
+    <!-- Modal Update Stok -->
+    <div class="modal-backdrop" id="modalStock">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <h3 id="stockModalTitle">Update Stok</h3>
+                <button class="modal-x-btn" onclick="closeModal('modalStock')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="stock-modal-body">
+                <input type="hidden" id="stockProductId">
+                <input type="hidden" id="stockVarianIndex">
+                <div class="stock-info-box">
+                    <div><span>Produk</span><strong id="stockProductName">—</strong></div>
+                    <div><span>Varian</span><strong id="stockVarianName">—</strong></div>
+                    <div><span>Stok Saat Ini</span><strong id="stockCurrent">—</strong></div>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Perubahan</label>
+                    <div class="radio-row">
+                        <label class="radio-opt">
+                            <input type="radio" name="stockAction" value="add" checked>
+                            <span>Tambah</span>
+                        </label>
+                        <label class="radio-opt">
+                            <input type="radio" name="stockAction" value="reduce">
+                            <span>Kurangi</span>
+                        </label>
+                        <label class="radio-opt">
+                            <input type="radio" name="stockAction" value="set">
+                            <span>Set Manual</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="stockAmount">Jumlah <span class="req">*</span></label>
+                    <input type="number" id="stockAmount" min="0" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label for="stockNote">Keterangan</label>
+                    <input type="text" id="stockNote" placeholder="Contoh: Restock dari supplier">
+                </div>
+            </div>
+            <div class="modal-btn-row">
+                <button class="btn-primary" id="confirmStockBtn">
+                    <i class="fa-solid fa-floppy-disk"></i> Simpan
+                </button>
+                <button class="btn-ghost" onclick="closeModal('modalStock')">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Pengguna -->
+    <div class="modal-backdrop" id="modalUserDetail">
+        <div class="modal-box modal-lg">
+            <div class="modal-top-bar">
+                <h3>Detail Pengguna</h3>
+                <button class="modal-x-btn" onclick="closeModal('modalUserDetail')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="userDetailContent" class="modal-body-scroll"></div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Status Pengguna -->
+    <div class="modal-backdrop" id="modalUserStatus">
+        <div class="modal-box">
+            <div class="modal-icon-wrap warning">
+                <i class="fa-solid fa-user-slash"></i>
+            </div>
+            <h3 id="userStatusModalTitle">Nonaktifkan Pengguna?</h3>
+            <p id="userStatusModalMsg">Apakah Anda yakin?</p>
+            <div class="modal-btn-row">
+                <button class="btn-warning" id="confirmUserStatusBtn">Konfirmasi</button>
+                <button class="btn-ghost" onclick="closeModal('modalUserStatus')">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display:none">
+        <div class="loading-box">
+            <div class="spinner-ring"></div>
+            <p id="loadingText">Memuat...</p>
+        </div>
+    </div>
+
+    <!-- Main Admin App -->
+    <script type="module" src="js/admin-app.js"></script>
+</body>
+</html>
