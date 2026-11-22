@@ -235,22 +235,30 @@ function setupLogout() {
     const doLogout = async () => {
         try {
             if (currentAdmin?.uid) {
-                const { addDoc, collection: col, serverTimestamp } =
-                    await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
-                await addDoc(col(db, 'loginLogs'), {
-                    uid: currentAdmin.uid, email: currentAdmin.email,
-                    nama: currentAdmin.nama || currentAdmin.email,
-                    loginAt: serverTimestamp(), eventType: 'logout'
-                });
-                // Update presence
-                const presenceRef = rtRef(rtdb, `presence/${currentAdmin.uid}`);
-                await rtSet(presenceRef, { status: 'offline', lastSeen: rtServerTimestamp() });
+                try {
+                    const { addDoc, collection: col, serverTimestamp } =
+                        await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+                    await addDoc(col(db, 'loginLogs'), {
+                        uid: currentAdmin.uid, email: currentAdmin.email,
+                        nama: currentAdmin.nama || currentAdmin.email,
+                        loginAt: serverTimestamp(), eventType: 'logout'
+                    });
+                    // Update presence
+                    const presenceRef = rtRef(rtdb, `presence/${currentAdmin.uid}`);
+                    await rtSet(presenceRef, { status: 'offline', lastSeen: rtServerTimestamp() });
+                } catch (logErr) {
+                    console.warn('Logout log skipped:', logErr.message);
+                }
             }
-            sessionStorage.removeItem('loginLogged');
+            sessionStorage.clear();
+            localStorage.clear();
             await signOut(auth);
-            window.location.href = 'login.html';
+            window.location.href = 'login-unified.html';
         } catch (e) {
-            showToast('Gagal logout: ' + e.message, 'error');
+            console.error('Logout error:', e);
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.href = 'login-unified.html';
         }
     };
     document.getElementById('btnLogout')?.addEventListener('click', (e) => { e.preventDefault(); doLogout(); });

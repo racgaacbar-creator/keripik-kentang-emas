@@ -519,12 +519,21 @@
                         });
                     }
                 } catch (_) {}
-                sessionStorage.removeItem('loginLogged');
+                sessionStorage.clear();
+                localStorage.clear();
                 await auth.signOut();
+                loggedInUser = null;
+                loggedInRole = null;
                 document.getElementById('loggedInCard').classList.remove('show');
                 showToast('Berhasil keluar. Silakan login dengan akun lain.', 'success');
             } catch (e) {
-                showToast('Gagal logout: ' + e.message, 'error');
+                try { await auth.signOut(); } catch (_) {}
+                sessionStorage.clear();
+                localStorage.clear();
+                loggedInUser = null;
+                loggedInRole = null;
+                document.getElementById('loggedInCard').classList.remove('show');
+                showToast('Sesi telah dibersihkan. Silakan login kembali.', 'info');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-right-from-bracket"></i> Ganti Akun';
@@ -614,18 +623,26 @@
                     resetBtn(); return;
                 }
 
-                // Update lastLoginAt
-                await updateDoc(doc(db, 'users', user.uid), {
-                    lastLoginAt: serverTimestamp()
-                });
+                // Update lastLoginAt (safe non-blocking)
+                try {
+                    await updateDoc(doc(db, 'users', user.uid), {
+                        lastLoginAt: serverTimestamp()
+                    });
+                } catch (updateErr) {
+                    console.warn('Update lastLoginAt skipped:', updateErr.message);
+                }
 
-                // Record login log
-                await addDoc(collection(db, 'loginLogs'), {
-                    uid: user.uid, email: user.email,
-                    nama: userData.nama || user.email,
-                    loginAt: serverTimestamp(),
-                    eventType: 'login'
-                });
+                // Record login log (safe non-blocking)
+                try {
+                    await addDoc(collection(db, 'loginLogs'), {
+                        uid: user.uid, email: user.email,
+                        nama: userData.nama || user.email,
+                        loginAt: serverTimestamp(),
+                        eventType: 'login'
+                    });
+                } catch (logErr) {
+                    console.warn('Login audit log skipped:', logErr.message);
+                }
 
                 // Redirect based on role
                 if (role === 'admin') {
@@ -638,6 +655,7 @@
                 }
 
             } catch (err) {
+                console.error('Login error detail:', err);
                 let msg = 'Terjadi kesalahan. Coba lagi.';
                 if (err.code === 'auth/invalid-credential' ||
                     err.code === 'auth/user-not-found' ||
@@ -647,6 +665,8 @@
                     msg = 'Terlalu banyak percobaan. Coba beberapa menit lagi.';
                 } else if (err.code === 'auth/user-disabled') {
                     msg = 'Akun ini telah dinonaktifkan.';
+                } else if (err.code === 'permission-denied') {
+                    msg = 'Akses ditolak oleh sistem keamanan (Permission Denied).';
                 }
                 showAlert(msg, 'error');
                 resetBtn();
