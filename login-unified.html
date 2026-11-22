@@ -507,16 +507,18 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Keluar...';
             try {
-                // Record logout log if was admin
-                if (loggedInUser && loggedInRole) {
-                    await addDoc(collection(db, 'loginLogs'), {
-                        uid: loggedInUser.uid,
-                        email: loggedInUser.email,
-                        nama: document.getElementById('liName').textContent,
-                        loginAt: serverTimestamp(),
-                        eventType: 'logout'
-                    });
-                }
+                // Record logout log if was admin (safe fallback)
+                try {
+                    if (loggedInUser && loggedInRole) {
+                        await addDoc(collection(db, 'loginLogs'), {
+                            uid: loggedInUser.uid,
+                            email: loggedInUser.email,
+                            nama: document.getElementById('liName').textContent,
+                            loginAt: serverTimestamp(),
+                            eventType: 'logout'
+                        });
+                    }
+                } catch (_) {}
                 sessionStorage.removeItem('loginLogged');
                 await auth.signOut();
                 document.getElementById('loggedInCard').classList.remove('show');
