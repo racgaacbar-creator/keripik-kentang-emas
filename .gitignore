@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 *.env
+*-adminsdk-*.json
+*firebase-adminsdk*.json
+~$*.docx
 
 # Firebase local
 .firebase/

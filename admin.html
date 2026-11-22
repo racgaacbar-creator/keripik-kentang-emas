@@ -54,6 +54,9 @@
                 <a href="#" class="nav-item" data-section="login-logs" id="nav-login-logs">
                     <i class="fa-solid fa-clock-rotate-left"></i><span>Riwayat Login</span>
                 </a>
+                <a href="#" class="nav-item" data-section="siem-center" id="nav-siem-center">
+                    <i class="fa-solid fa-shield-halved"></i><span>SIEM & Security Center</span>
+                </a>
             </div>
             <div class="nav-group">
                 <p class="nav-group-label">Pengaturan</p>
@@ -585,6 +588,99 @@
                 <div class="table-footer">
                     <span id="logsCountText">0 aktivitas</span>
                     <div class="pagination" id="logsPagination"></div>
+                </div>
+            </section>
+
+            <!-- ============================================================
+                 SECTION: SIEM & SECURITY CENTER (FASE 4)
+            ============================================================ -->
+            <section id="section-siem-center" class="content-section">
+                <div class="section-header">
+                    <div>
+                        <h2><i class="fa-solid fa-shield-halved text-gold"></i> SIEM &amp; Security Center</h2>
+                        <p>Sentralisasi Telemetri Keamanan, Detection Engineering &amp; Pemetaan MITRE ATT&amp;CK</p>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary" id="btnSimulateAttack">
+                            <i class="fa-solid fa-bolt"></i> Jalankan Simulasi Deteksi Serangan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SIEM Telemetry Stats -->
+                <div class="stats-grid" style="margin-bottom: 24px;">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-brown"><i class="fa-solid fa-bell"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Total Insiden / Alert</p>
+                            <h3 class="stat-value" id="siemTotalAlerts">3</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-gold"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Ancaman High / Critical</p>
+                            <h3 class="stat-value" id="siemHighAlerts">3</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-green"><i class="fa-solid fa-list-check"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Detection Rules Aktif</p>
+                            <h3 class="stat-value" id="siemActiveRules">5</h3>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon icon-blue"><i class="fa-solid fa-shield-virus"></i></div>
+                        <div class="stat-body">
+                            <p class="stat-label">Posture Security Score</p>
+                            <h3 class="stat-value" id="siemPostureScore">98 / 100</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Security Alerts Table -->
+                <div class="panel" style="margin-bottom: 24px;">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-tower-broadcast"></i> Live Security Alerts &amp; Incident Feed</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Alert ID</th>
+                                    <th>Waktu</th>
+                                    <th>Deteksi Rule &amp; MITRE ATT&amp;CK</th>
+                                    <th>Sumber / Target</th>
+                                    <th>Severity</th>
+                                    <th>Status Mitigasi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="siemAlertsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Detection Rules & MITRE Mapping -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-bullseye"></i> Aturan Deteksi (Detection Engineering) &amp; MITRE ATT&amp;CK Mapping</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Rule ID</th>
+                                    <th>Nama Aturan Deteksi</th>
+                                    <th>MITRE ATT&amp;CK Technique</th>
+                                    <th>Severity</th>
+                                    <th>Threshold / Logic</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="siemRulesBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 

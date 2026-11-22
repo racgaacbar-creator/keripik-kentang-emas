@@ -473,6 +473,11 @@ ul { list-style: none; }
 .badge-orange { background: var(--orange-light);  color: var(--orange); }
 .badge-gray   { background: #F1F5F9;              color: #64748B; }
 .badge-blue   { background: var(--blue-light);    color: var(--blue); }
+.badge-danger { background: #FEE2E2; color: #DC2626; font-weight: 700; }
+.badge-warning { background: #FEF3C7; color: #D97706; font-weight: 700; }
+.badge-info { background: #E0F2FE; color: #0284C7; font-weight: 700; }
+.badge-success { background: #DCFCE7; color: #16A34A; font-weight: 700; }
+.badge-mitre { background: #EDE9FE; color: #7C3AED; font-family: monospace; font-size: 0.8rem; font-weight: 700; }
 .status-dot {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: .8rem; font-weight: 500;

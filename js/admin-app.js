@@ -22,6 +22,7 @@ import { initStock, loadStock } from './admin-stock.js';
 import { initUsers, loadUsers } from './admin-users.js';
 import { initLogs, loadLogs } from './admin-logs.js';
 import { initContact, loadContact } from './admin-contact.js';
+import { initSiem, loadSiem } from './admin-siem.js';
 
 // ── State ──
 let currentAdmin = null;
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initUsers();
     initLogs();
     initContact();
+    initSiem();
 
     // Auth Guard
     onAuthStateChanged(auth, async (user) => {
@@ -173,6 +175,7 @@ const sectionTitles = {
     'stock': 'Manajemen Stok',
     'users': 'Manajemen Pengguna',
     'login-logs': 'Riwayat Login',
+    'siem-center': 'SIEM & Security Center',
     'contact': 'Pengaturan Kontak',
     'store-settings': 'Pengaturan Toko',
 };
@@ -219,6 +222,7 @@ async function loadSection(section) {
         case 'stock': loadStock(); break;
         case 'users': loadUsers(); break;
         case 'login-logs': loadLogs(); break;
+        case 'siem-center': loadSiem(); break;
         case 'contact': loadContact(); break;
         case 'store-settings': loadStoreSettings(); break;
     }
